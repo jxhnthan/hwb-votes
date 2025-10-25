@@ -1,0 +1,128 @@
+.upload-card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px var(--color-shadow);
+}
+
+.upload-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.813rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: var(--color-text-primary);
+  background-color: white;
+  transition: all 0.15s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-text-primary);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+.form-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* File input */
+.file-input {
+  display: none;
+}
+
+.file-label {
+  display: block;
+  padding: 16px;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.file-label:hover {
+  border-color: var(--color-text-primary);
+  background-color: #fafafa;
+}
+
+/* Preview */
+.preview {
+  margin-bottom: 16px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  max-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafa;
+}
+
+.preview-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 300px;
+  object-fit: contain;
+}
+
+/* Error message */
+.error-message {
+  padding: 10px 12px;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  border-radius: var(--radius);
+  font-size: 0.813rem;
+  margin-bottom: 12px;
+}
+
+/* Form actions */
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.form-actions .btn {
+  padding: 10px 24px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .upload-card {
+    padding: 20px;
+  }
+  
+  .preview {
+    max-height: 250px;
+  }
+  
+  .preview-image {
+    max-height: 250px;
+  }
+}
