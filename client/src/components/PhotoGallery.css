@@ -212,6 +212,7 @@
   justify-content: center;
   padding: 20px;
   animation: fadeIn 0.2s ease;
+  cursor: pointer;
 }
 
 @keyframes fadeIn {
@@ -223,30 +224,31 @@
   }
 }
 
-.viewer-close {
+.viewer-hint {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 48px;
-  height: 48px;
-  border: none;
-  background-color: rgba(0, 0, 0, 0.6);
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
   color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  font-size: 32px;
-  font-weight: 300;
+  font-size: 0.875rem;
+  font-weight: 400;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 10px 20px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  animation: fadeInDown 0.3s ease;
   z-index: 1001;
-  backdrop-filter: blur(8px);
-  border-radius: 4px;
 }
 
-.viewer-close:hover {
-  background-color: rgba(0, 0, 0, 0.8);
-  transform: scale(1.05);
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 .viewer-content {
@@ -256,6 +258,7 @@
   flex-direction: column;
   gap: 20px;
   animation: scaleIn 0.2s ease;
+  cursor: default;
 }
 
 @keyframes scaleIn {
@@ -338,12 +341,10 @@
     height: 18px;
   }
   
-  .viewer-close {
+  .viewer-hint {
     top: 16px;
-    right: 16px;
-    width: 56px;
-    height: 56px;
-    font-size: 40px;
+    font-size: 0.813rem;
+    padding: 8px 16px;
   }
   
   .viewer-content {
