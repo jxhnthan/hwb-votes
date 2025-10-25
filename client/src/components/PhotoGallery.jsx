@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './PhotoGallery.css';
 
-function PhotoGallery({ photos, apiUrl, onVote, isAdmin, onDelete }) {
+function PhotoGallery({ photos, apiUrl, deviceId, onVote, isAdmin, onDelete }) {
   const [votedPhotos, setVotedPhotos] = useState({});
   const [viewingPhoto, setViewingPhoto] = useState(null);
 
@@ -28,7 +28,7 @@ function PhotoGallery({ photos, apiUrl, onVote, isAdmin, onDelete }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ voteType }),
+        body: JSON.stringify({ voteType, deviceId }),
       });
 
       if (!response.ok) {

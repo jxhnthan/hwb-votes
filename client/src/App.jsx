@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import PhotoUpload from './components/PhotoUpload';
 import PhotoGallery from './components/PhotoGallery';
+import { getDeviceId } from './utils/deviceId';
 
 // Use production API URL if deployed, otherwise localhost
 const API_URL = import.meta.env.PROD 
@@ -14,11 +15,12 @@ function App() {
   const [showUpload, setShowUpload] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminPrompt, setShowAdminPrompt] = useState(false);
+  const [deviceId] = useState(() => getDeviceId());
 
   // Fetch photos from backend
   const fetchPhotos = async () => {
     try {
-      const response = await fetch(`${API_URL}/photos`);
+      const response = await fetch(`${API_URL}/photos?deviceId=${deviceId}`);
       const data = await response.json();
       setPhotos(data);
       setLoading(false);
@@ -170,6 +172,7 @@ function App() {
           <PhotoGallery 
             photos={photos} 
             apiUrl={API_URL}
+            deviceId={deviceId}
             onVote={fetchPhotos}
             isAdmin={isAdmin}
             onDelete={handleDeletePhoto}

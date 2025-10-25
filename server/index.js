@@ -6,7 +6,6 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
-import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -49,7 +48,8 @@ const upload = multer({
 });
 
 // Initialize SQLite database
-const db = new Database('voting.db');
+const dbPath = join(__dirname, 'voting.db');
+const db = new Database(dbPath);
 
 // Create tables
 db.exec(`
@@ -79,21 +79,25 @@ db.exec(`
 // Get all photos with vote status for current device
 app.get('/api/photos', (req, res) => {
   try {
-    const deviceId = generateDeviceId(req);
+    const deviceId = req.query.deviceId;
     const photos = db.prepare('SELECT * FROM photos ORDER BY created_at DESC').all();
     
-    // Check which photos this device has voted for
-    const votedPhotoIds = db.prepare('SELECT photo_id FROM votes WHERE device_id = ?')
-      .all(deviceId)
-      .map(v => v.photo_id);
+    if (deviceId) {
+      // Check which photos this device has voted for
+      const votedPhotoIds = db.prepare('SELECT photo_id FROM votes WHERE device_id = ?')
+        .all(deviceId)
+        .map(v => v.photo_id);
+      
+      // Add voted flag to each photo
+      const photosWithVoteStatus = photos.map(photo => ({
+        ...photo,
+        hasVoted: votedPhotoIds.includes(photo.id)
+      }));
+      
+      return res.json(photosWithVoteStatus);
+    }
     
-    // Add voted flag to each photo
-    const photosWithVoteStatus = photos.map(photo => ({
-      ...photo,
-      hasVoted: votedPhotoIds.includes(photo.id)
-    }));
-    
-    res.json(photosWithVoteStatus);
+    res.json(photos);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -134,20 +138,15 @@ app.get('/api/photo/:filename', (req, res) => {
   }
 });
 
-// Generate device fingerprint from IP and User Agent
-function generateDeviceId(req) {
-  const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.ip || req.connection.remoteAddress;
-  const userAgent = req.headers['user-agent'] || '';
-  const fingerprint = `${ip}-${userAgent}`;
-  return crypto.createHash('sha256').update(fingerprint).digest('hex');
-}
-
 // Vote for a photo with device fingerprinting
 app.post('/api/vote/:id', (req, res) => {
   try {
     const { id } = req.params;
-    const { voteType } = req.body;
-    const deviceId = generateDeviceId(req);
+    const { voteType, deviceId } = req.body;
+
+    if (!deviceId) {
+      return res.status(400).json({ error: 'Device ID is required' });
+    }
 
     // Check if device has already voted for this photo
     const existingVote = db.prepare('SELECT * FROM votes WHERE photo_id = ? AND device_id = ?').get(id, deviceId);
