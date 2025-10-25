@@ -229,27 +229,23 @@
   right: 20px;
   width: 48px;
   height: 48px;
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  background-color: rgba(0, 0, 0, 0.75);
+  border: none;
+  background-color: transparent;
   color: white;
   cursor: pointer;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 32px;
+  font-weight: 300;
   z-index: 1001;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .viewer-close:hover {
-  background-color: rgba(255, 255, 255, 0.95);
-  color: black;
-  border-color: white;
-  transform: scale(1.1);
+  transform: scale(1.2);
+  opacity: 0.8;
 }
 
 .viewer-content {
@@ -344,10 +340,9 @@
   .viewer-close {
     top: 16px;
     right: 16px;
-    width: 52px;
-    height: 52px;
-    border-width: 3px;
-    font-size: 28px;
+    width: 56px;
+    height: 56px;
+    font-size: 40px;
   }
   
   .viewer-content {
