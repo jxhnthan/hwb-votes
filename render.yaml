@@ -1,0 +1,22 @@
+services:services:
+
+  - type: web  - type: web
+
+    name: hwb-votes    name: hwb-votes
+
+    env: node    env: node
+
+    buildCommand: npm run install-all && npm run build    buildCommand: npm run install-all && npm run build
+
+    startCommand: npm start    startCommand: npm start
+
+    disk:    envVars:
+
+      name: uploads      - key: NODE_ENV
+
+      mountPath: /opt/render/project/src/server/uploads        value: production
+
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
