@@ -7,3 +7,7 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+    disk:
+      name: hwb-votes-data
+      mountPath: /opt/render/project/src/server
+      sizeGB: 1
