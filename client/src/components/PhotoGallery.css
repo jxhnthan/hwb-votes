@@ -229,8 +229,8 @@
   right: 20px;
   width: 48px;
   height: 48px;
-  border: none;
-  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  background-color: rgba(0, 0, 0, 0.75);
   color: white;
   cursor: pointer;
   border-radius: 50%;
@@ -239,10 +239,16 @@
   justify-content: center;
   transition: all 0.2s ease;
   backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  font-size: 24px;
+  font-weight: bold;
+  z-index: 1001;
 }
 
 .viewer-close:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.95);
+  color: black;
+  border-color: white;
   transform: scale(1.1);
 }
 
@@ -336,10 +342,12 @@
   }
   
   .viewer-close {
-    top: 10px;
-    right: 10px;
-    width: 40px;
-    height: 40px;
+    top: 16px;
+    right: 16px;
+    width: 52px;
+    height: 52px;
+    border-width: 3px;
+    font-size: 28px;
   }
   
   .viewer-content {
