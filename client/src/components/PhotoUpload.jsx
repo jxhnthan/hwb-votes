@@ -55,15 +55,25 @@ function PhotoUpload({ apiUrl, onSuccess }) {
     formData.append('photo', selectedFile);
     formData.append('title', title);
 
+    console.log('Uploading to:', `${apiUrl}/upload`);
+    console.log('File:', selectedFile.name, 'Size:', selectedFile.size);
+
     try {
       const response = await fetch(`${apiUrl}/upload`, {
         method: 'POST',
         body: formData,
       });
 
+      console.log('Upload response status:', response.status);
+
       if (!response.ok) {
-        throw new Error('Upload failed');
+        const errorData = await response.json().catch(() => ({ error: 'Upload failed' }));
+        console.error('Upload error:', errorData);
+        throw new Error(errorData.error || 'Upload failed');
       }
+
+      const data = await response.json();
+      console.log('Upload success:', data);
 
       // Reset form
       setSelectedFile(null);
@@ -75,7 +85,8 @@ function PhotoUpload({ apiUrl, onSuccess }) {
         onSuccess();
       }
     } catch (err) {
-      setError('Failed to upload photo. Please try again.');
+      console.error('Upload exception:', err);
+      setError(`Failed to upload photo: ${err.message}`);
       setUploading(false);
     }
   };

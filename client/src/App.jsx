@@ -9,6 +9,9 @@ const API_URL = import.meta.env.PROD
   ? window.location.origin + '/api'
   : 'http://localhost:3001/api';
 
+console.log('API_URL:', API_URL);
+console.log('Environment:', import.meta.env.PROD ? 'production' : 'development');
+
 function App() {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,8 +23,16 @@ function App() {
   // Fetch photos from backend
   const fetchPhotos = async () => {
     try {
+      console.log('Fetching photos from:', `${API_URL}/photos?deviceId=${deviceId}`);
       const response = await fetch(`${API_URL}/photos?deviceId=${deviceId}`);
+      console.log('Fetch response status:', response.status);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
+      console.log('Fetched photos:', data.length, 'photos');
       setPhotos(data);
       setLoading(false);
     } catch (error) {
