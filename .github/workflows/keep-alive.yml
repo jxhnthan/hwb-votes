@@ -13,8 +13,8 @@ jobs:
     steps:
       - name: Ping the app
         run: |
-          echo "Pinging https://hwb-votes.onrender.com/api/photos"
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://hwb-votes.onrender.com/api/photos)
+          echo "Pinging https://hwb-votes.onrender.com/"
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://hwb-votes.onrender.com/)
           echo "Response status: $response"
           
           if [ $response -eq 200 ]; then
