@@ -5,13 +5,16 @@ function PhotoGallery({ photos, apiUrl, onVote, isAdmin, onDelete }) {
   const [votedPhotos, setVotedPhotos] = useState({});
   const [viewingPhoto, setViewingPhoto] = useState(null);
 
-  // Load voted photos from localStorage
+  // Load voted photos from server response (photos now include hasVoted flag)
   useEffect(() => {
-    const stored = localStorage.getItem('votedPhotos');
-    if (stored) {
-      setVotedPhotos(JSON.parse(stored));
-    }
-  }, []);
+    const votedMap = {};
+    photos.forEach(photo => {
+      if (photo.hasVoted) {
+        votedMap[photo.id] = 'up';
+      }
+    });
+    setVotedPhotos(votedMap);
+  }, [photos]);
 
   const handleVote = async (photoId, voteType) => {
     // Check if already voted
@@ -29,22 +32,22 @@ function PhotoGallery({ photos, apiUrl, onVote, isAdmin, onDelete }) {
       });
 
       if (!response.ok) {
-        throw new Error('Vote failed');
+        const error = await response.json();
+        alert(error.error || 'Vote failed');
+        return;
       }
 
       // Update local state
       const newVotedPhotos = { ...votedPhotos, [photoId]: voteType };
       setVotedPhotos(newVotedPhotos);
 
-      // Save to localStorage
-      localStorage.setItem('votedPhotos', JSON.stringify(newVotedPhotos));
-
-      // Refresh photos
+      // Refresh photos to get updated vote counts
       if (onVote) {
         onVote();
       }
     } catch (error) {
       console.error('Error voting:', error);
+      alert('Failed to submit vote');
     }
   };
 
