@@ -230,7 +230,7 @@
   width: 48px;
   height: 48px;
   border: none;
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.6);
   color: white;
   cursor: pointer;
   display: flex;
@@ -240,12 +240,13 @@
   font-size: 32px;
   font-weight: 300;
   z-index: 1001;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  border-radius: 4px;
 }
 
 .viewer-close:hover {
-  transform: scale(1.2);
-  opacity: 0.8;
+  background-color: rgba(0, 0, 0, 0.8);
+  transform: scale(1.05);
 }
 
 .viewer-content {
