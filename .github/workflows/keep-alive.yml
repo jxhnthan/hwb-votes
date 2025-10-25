@@ -1,0 +1,29 @@
+name: Keep App Awake
+
+on:
+  schedule:
+    # Run every 10 minutes
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual triggering from GitHub UI
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Ping the app
+        run: |
+          echo "Pinging https://hwb-votes.onrender.com/api/photos"
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://hwb-votes.onrender.com/api/photos)
+          echo "Response status: $response"
+          
+          if [ $response -eq 200 ]; then
+            echo "✅ App is awake and responding!"
+          else
+            echo "⚠️  App returned status: $response"
+            exit 1
+          fi
+      
+      - name: Log timestamp
+        run: |
+          echo "Last ping: $(date)"
