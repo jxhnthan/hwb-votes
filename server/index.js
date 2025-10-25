@@ -227,11 +227,25 @@ app.delete('/api/photo/:id', (req, res) => {
 // Serve static files from React app in production
 if (process.env.NODE_ENV === 'production') {
   const clientBuildPath = join(__dirname, '../client/dist');
-  app.use(express.static(clientBuildPath));
   
-  // Handle React routing - return all requests to React app
+  // Serve static files with proper headers
+  app.use(express.static(clientBuildPath, {
+    maxAge: '1d',
+    etag: true,
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.js')) {
+        res.setHeader('Content-Type', 'application/javascript');
+      } else if (filePath.endsWith('.css')) {
+        res.setHeader('Content-Type', 'text/css');
+      }
+    }
+  }));
+  
+  // Handle React routing - return all non-API requests to React app
   app.get('*', (req, res) => {
-    res.sendFile(join(clientBuildPath, 'index.html'));
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(join(clientBuildPath, 'index.html'));
+    }
   });
 }
 
