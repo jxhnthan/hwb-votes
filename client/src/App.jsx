@@ -117,7 +117,9 @@ function App() {
     <div className="app">
       <header className="header">
         <div className="header-content">
-          <h1 className="title">HWB 5th Year Anniversary Dress Up</h1>
+          <h1 className="title">
+            HWB 5th Year Anniversary <span className="mobile-break"><br /></span>Dress Up
+          </h1>
           <p className="tagline">Vote for your favourite costume!</p>
         </div>
         <div className="header-actions">

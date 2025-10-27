@@ -71,6 +71,10 @@ body {
   line-height: 1;
 }
 
+.mobile-break {
+  display: none;
+}
+
 .tagline {
   font-size: 0.938rem;
   color: var(--color-text-secondary);
@@ -259,6 +263,11 @@ body {
   
   .title {
     font-size: 1.5rem;
+    line-height: 1.3;
+  }
+  
+  .mobile-break {
+    display: inline;
   }
   
   .tagline {
