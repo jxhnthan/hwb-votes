@@ -2,7 +2,7 @@ services:
   - type: web
     name: hwb-votes
     env: node
-    plan: free  # Explicitly set free tier
+    plan: starter  # Reflects upgraded Render Starter plan
     buildCommand: npm run install-all && npm run build
     startCommand: npm start
     envVars:
