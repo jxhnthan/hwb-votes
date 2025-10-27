@@ -18,7 +18,21 @@ function App() {
   const [showUpload, setShowUpload] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminPrompt, setShowAdminPrompt] = useState(false);
+  const [showWelcomeNotification, setShowWelcomeNotification] = useState(false);
   const [deviceId] = useState(() => getDeviceId());
+
+  // Check if user has seen the welcome notification
+  useEffect(() => {
+    const hasSeenNotification = localStorage.getItem('hwb-welcome-seen');
+    if (!hasSeenNotification) {
+      setShowWelcomeNotification(true);
+    }
+  }, []);
+
+  const handleCloseWelcome = () => {
+    setShowWelcomeNotification(false);
+    localStorage.setItem('hwb-welcome-seen', 'true');
+  };
 
   // Fetch photos from backend
   const fetchPhotos = async () => {
@@ -103,7 +117,7 @@ function App() {
     <div className="app">
       <header className="header">
         <div className="header-content">
-          <h1 className="title">HWB Votes</h1>
+          <h1 className="title">HWB 5th Year Anniversary Dress Up</h1>
           <p className="tagline">Vote for your favourite costume!</p>
         </div>
         <div className="header-actions">
@@ -132,6 +146,25 @@ function App() {
           </button>
         </div>
       </header>
+
+      {showWelcomeNotification && (
+        <div className="modal-overlay" onClick={handleCloseWelcome}>
+          <div className="modal welcome-modal" onClick={(e) => e.stopPropagation()}>
+            <h2>🎉 Welcome to the Costume Contest!</h2>
+            <p className="welcome-text">
+              Upload a photo of your costume to enter the contest and vote for your favorite costume! Most creative costume for each value (Authenticity/ Compassion/ Growth/ Respect) wins an attractive prize
+            </p>
+            <div className="modal-actions">
+              <button 
+                className="btn btn-primary btn-full"
+                onClick={handleCloseWelcome}
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showAdminPrompt && (
         <div className="modal-overlay" onClick={() => setShowAdminPrompt(false)}>

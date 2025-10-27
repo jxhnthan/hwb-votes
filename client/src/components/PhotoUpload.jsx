@@ -96,16 +96,16 @@ function PhotoUpload({ apiUrl, onSuccess }) {
       <form onSubmit={handleSubmit} className="upload-form">
         <div className="form-group">
           <label htmlFor="title" className="form-label">
-            Photo Title
+            Your Name and Description of Costume/ Value
           </label>
           <input
             type="text"
             id="title"
             className="form-input"
-            placeholder="Enter a title for your photo"
+            placeholder="e.g. John - Superhero Costume (Compassion)"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            maxLength={100}
+            maxLength={150}
           />
         </div>
 

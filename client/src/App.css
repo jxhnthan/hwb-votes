@@ -148,6 +148,22 @@ body {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
 }
 
+.welcome-modal {
+  max-width: 500px;
+}
+
+.welcome-text {
+  font-size: 0.938rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.welcome-text strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
 .modal h2 {
   margin-bottom: 20px;
   font-size: 1.5rem;
@@ -183,6 +199,10 @@ body {
 
 .btn-primary:hover {
   background-color: var(--color-text-secondary);
+}
+
+.btn-full {
+  width: 100%;
 }
 
 /* Main */
