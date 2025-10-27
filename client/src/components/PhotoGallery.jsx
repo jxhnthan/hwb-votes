@@ -4,6 +4,7 @@ import './PhotoGallery.css';
 function PhotoGallery({ photos, apiUrl, deviceId, onVote, isAdmin, onDelete }) {
   const [votedPhotos, setVotedPhotos] = useState({});
   const [viewingPhoto, setViewingPhoto] = useState(null);
+  const [filterValue, setFilterValue] = useState('');
 
   // Load voted photos from server response (photos now include hasVoted flag)
   useEffect(() => {
@@ -51,8 +52,11 @@ function PhotoGallery({ photos, apiUrl, deviceId, onVote, isAdmin, onDelete }) {
     }
   };
 
-  // Sort photos by votes (descending)
-  const sortedPhotos = [...photos].sort((a, b) => b.votes - a.votes);
+  // Filter and sort photos by votes (descending)
+  const filteredPhotos = filterValue
+    ? photos.filter(photo => photo.value === filterValue)
+    : photos;
+  const sortedPhotos = [...filteredPhotos].sort((a, b) => b.votes - a.votes);
 
   // Create grid with 12 total slots
   const gridSize = 12;
@@ -63,7 +67,6 @@ function PhotoGallery({ photos, apiUrl, deviceId, onVote, isAdmin, onDelete }) {
     if (i < sortedPhotos.length) {
       const photo = sortedPhotos[i];
       const userVote = votedPhotos[photo.id];
-      
       gridItems.push(
         <div key={photo.id} className="photo-card">
           {isAdmin && (
@@ -84,7 +87,6 @@ function PhotoGallery({ photos, apiUrl, deviceId, onVote, isAdmin, onDelete }) {
               </svg>
             </button>
           )}
-          
           <div 
             className="photo-content"
             onClick={() => setViewingPhoto(photo)}
@@ -99,9 +101,9 @@ function PhotoGallery({ photos, apiUrl, deviceId, onVote, isAdmin, onDelete }) {
               />
             </div>
           </div>
-          
           <div className="photo-footer">
             <h3 className="photo-title">{photo.title}</h3>
+            <div className="photo-value">{photo.value}</div>
             <div className="vote-actions">
               <button
                 className={`vote-btn ${userVote === 'up' ? 'active' : ''}`}
@@ -136,14 +138,24 @@ function PhotoGallery({ photos, apiUrl, deviceId, onVote, isAdmin, onDelete }) {
 
   return (
     <>
+      <div className="gallery-tags">
+        {['All', 'Authenticity', 'Compassion', 'Growth', 'Respect'].map(val => (
+          <button
+            key={val}
+            className={`tag-btn${filterValue === val || (val === 'All' && !filterValue) ? ' active' : ''}`}
+            onClick={() => setFilterValue(val === 'All' ? '' : val)}
+            type="button"
+          >
+            {val}
+          </button>
+        ))}
+      </div>
       <div className="gallery">
         {gridItems}
       </div>
-
-      {viewingPhoto && (
+      {viewingPhoto ? (
         <div className="photo-viewer" onClick={() => setViewingPhoto(null)}>
           <div className="viewer-hint">Tap anywhere to close</div>
-          
           <div className="viewer-content" onClick={(e) => e.stopPropagation()}>
             <img
               src={`${apiUrl}/photo/${viewingPhoto.filename}`}
@@ -152,6 +164,7 @@ function PhotoGallery({ photos, apiUrl, deviceId, onVote, isAdmin, onDelete }) {
             />
             <div className="viewer-info">
               <h2>{viewingPhoto.title}</h2>
+              <div className="viewer-value">{viewingPhoto.value}</div>
               <div className="viewer-votes">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="18 15 12 9 6 15"></polyline>
@@ -161,7 +174,7 @@ function PhotoGallery({ photos, apiUrl, deviceId, onVote, isAdmin, onDelete }) {
             </div>
           </div>
         </div>
-      )}
+      ) : null}
     </>
   );
 }

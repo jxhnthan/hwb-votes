@@ -5,6 +5,7 @@ function PhotoUpload({ apiUrl, onSuccess }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [title, setTitle] = useState('');
+  const [value, setValue] = useState('');
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
@@ -43,8 +44,13 @@ function PhotoUpload({ apiUrl, onSuccess }) {
       return;
     }
 
+
     if (!title.trim()) {
       setError('Please enter a title');
+      return;
+    }
+    if (!value) {
+      setError('Please select a value');
       return;
     }
 
@@ -52,8 +58,9 @@ function PhotoUpload({ apiUrl, onSuccess }) {
     setError('');
 
     const formData = new FormData();
-    formData.append('photo', selectedFile);
-    formData.append('title', title);
+  formData.append('photo', selectedFile);
+  formData.append('title', title);
+  formData.append('value', value);
 
     console.log('Uploading to:', `${apiUrl}/upload`);
     console.log('File:', selectedFile.name, 'Size:', selectedFile.size);
@@ -96,17 +103,35 @@ function PhotoUpload({ apiUrl, onSuccess }) {
       <form onSubmit={handleSubmit} className="upload-form">
         <div className="form-group">
           <label htmlFor="title" className="form-label">
-            Your Name and Description of Costume/ Value
+            Your Name and Description of Costume
           </label>
           <input
             type="text"
             id="title"
             className="form-input"
-            placeholder="e.g. John - Superhero Costume (Compassion)"
+            placeholder="e.g. John - Superhero Costume"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             maxLength={150}
           />
+        </div>
+        <div className="form-group">
+          <label htmlFor="value" className="form-label">
+            Select Value
+          </label>
+          <select
+            id="value"
+            className="form-input"
+            value={value}
+            onChange={e => setValue(e.target.value)}
+            required
+          >
+            <option value="">-- Select --</option>
+            <option value="Authenticity">Authenticity</option>
+            <option value="Compassion">Compassion</option>
+            <option value="Growth">Growth</option>
+            <option value="Respect">Respect</option>
+          </select>
         </div>
 
         <div className="form-group">
