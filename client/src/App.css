@@ -163,9 +163,27 @@ body {
   margin-bottom: 24px;
 }
 
-.welcome-text strong {
-  color: var(--color-text-primary);
+.welcome-title {
+  font-size: 1.25rem;
   font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--color-text-primary);
+  text-align: left;
+}
+
+.welcome-text p {
+  margin-bottom: 12px;
+}
+
+.welcome-values {
+  margin: 8px 0 0 18px;
+  padding: 0;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+}
+.welcome-values li {
+  margin-bottom: 4px;
+  list-style-type: disc;
 }
 
 .modal h2 {

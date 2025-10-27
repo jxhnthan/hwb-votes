@@ -152,16 +152,28 @@ function App() {
       {showWelcomeNotification && (
         <div className="modal-overlay" onClick={handleCloseWelcome}>
           <div className="modal welcome-modal" onClick={(e) => e.stopPropagation()}>
-            <h2>🎉 Welcome to the Costume Contest!</h2>
-            <p className="welcome-text">
-              Upload a photo of your costume to enter the contest and vote for your favorite costume! Most creative costume for each value (Authenticity/ Compassion/ Growth/ Respect) wins an attractive prize
-            </p>
+            <h2 className="welcome-title">Welcome to the Costume Contest</h2>
+            <div className="welcome-text">
+              <p>
+                Upload a photo of your costume to enter the contest and vote for your favorite costume.
+              </p>
+              <p>
+                <strong>Contest Details:</strong><br />
+                The most creative costume for each value wins an attractive prize.
+              </p>
+              <ul className="welcome-values">
+                <li>Authenticity</li>
+                <li>Compassion</li>
+                <li>Growth</li>
+                <li>Respect</li>
+              </ul>
+            </div>
             <div className="modal-actions">
               <button 
                 className="btn btn-primary btn-full"
                 onClick={handleCloseWelcome}
               >
-                Got it!
+                Got it
               </button>
             </div>
           </div>
