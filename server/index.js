@@ -76,6 +76,15 @@ db.exec(`
 
 // API Routes
 
+// Health check endpoint for keep-alive pings
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 // Get all photos with vote status for current device
 app.get('/api/photos', (req, res) => {
   try {

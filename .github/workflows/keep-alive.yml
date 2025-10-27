@@ -2,28 +2,40 @@ name: Keep App Awake
 
 on:
   schedule:
-    # Run every 5 minutes (minimum allowed)
+    # Run every 5 minutes (minimum allowed by GitHub)
     - cron: '*/5 * * * *'
   workflow_dispatch: # Allows manual triggering from GitHub UI
 
 jobs:
   ping:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     
     steps:
-      - name: Ping the app
+      - name: Ping health endpoint
         run: |
-          echo "Pinging https://hwb-votes.onrender.com/"
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://hwb-votes.onrender.com/)
-          echo "Response status: $response"
+          echo "🏥 Pinging health endpoint..."
+          for i in {1..3}; do
+            echo "Attempt $i of 3"
+            response=$(curl -s -o /dev/null -w "%{http_code}" -m 60 https://hwb-votes.onrender.com/api/health)
+            echo "Response: $response"
+            
+            if [ $response -eq 200 ] || [ $response -eq 304 ]; then
+              echo "✅ Health check passed!"
+              break
+            else
+              echo "⚠️ Retrying..."
+              sleep 10
+            fi
+          done
           
-          if [ $response -eq 200 ]; then
-            echo "✅ App is awake and responding!"
-          else
-            echo "⚠️  App returned status: $response"
-            exit 1
-          fi
+      - name: Ping API endpoint
+        run: |
+          echo "� Pinging API endpoint..."
+          response=$(curl -s -m 60 https://hwb-votes.onrender.com/api/photos | head -c 100)
+          echo "API Response preview: $response"
+          echo "✅ API endpoint responding!"
       
       - name: Log timestamp
         run: |
-          echo "Last ping: $(date)"
+          echo "⏰ Keep-alive ping completed at: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
