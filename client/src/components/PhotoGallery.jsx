@@ -90,7 +90,7 @@ function PhotoGallery({ photos, apiUrl, deviceId, onVote, isAdmin, onDelete }) {
           <div 
             className="photo-content"
             onClick={() => setViewingPhoto(photo)}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: 'pointer', position: 'relative' }}
           >
             <div className="photo-wrapper">
               <img
@@ -99,11 +99,12 @@ function PhotoGallery({ photos, apiUrl, deviceId, onVote, isAdmin, onDelete }) {
                 className="photo-image"
                 loading="lazy"
               />
+              <div className="photo-title-overlay">
+                {photo.title}
+              </div>
             </div>
           </div>
           <div className="photo-footer">
-            <h3 className="photo-title">{photo.title}</h3>
-            <div className="photo-value">{photo.value}</div>
             <div className="vote-actions">
               <button
                 className={`vote-btn ${userVote === 'up' ? 'active' : ''}`}

@@ -101,6 +101,7 @@ body {
   display: flex;
   flex-direction: column;
   background-color: var(--color-bg);
+  padding-top: 20px;
 }
 
 /* Header */

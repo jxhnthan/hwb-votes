@@ -1,3 +1,23 @@
+/* Overlay for photo title on grid card */
+.photo-title-overlay {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 7px 10px 6px 10px;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  box-sizing: border-box;
+  text-align: left;
+  z-index: 2;
+  pointer-events: none;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
 .gallery {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
