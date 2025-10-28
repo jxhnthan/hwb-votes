@@ -58,10 +58,17 @@ db.exec(`
     filename TEXT NOT NULL,
     original_name TEXT NOT NULL,
     title TEXT,
+    value TEXT,
     votes INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )
 `);
+// Add value column if missing (migration)
+try {
+  db.prepare('SELECT value FROM photos LIMIT 1').get();
+} catch (e) {
+  db.exec('ALTER TABLE photos ADD COLUMN value TEXT;');
+}
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS votes (
@@ -120,14 +127,14 @@ app.post('/api/upload', upload.single('photo'), (req, res) => {
     }
 
     const photoId = uuidv4();
-    const { title } = req.body;
+    const { title, value } = req.body;
 
     const stmt = db.prepare(`
-      INSERT INTO photos (id, filename, original_name, title)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO photos (id, filename, original_name, title, value)
+      VALUES (?, ?, ?, ?, ?)
     `);
 
-    stmt.run(photoId, req.file.filename, req.file.originalname, title || '');
+    stmt.run(photoId, req.file.filename, req.file.originalname, title || '', value || '');
 
     const photo = db.prepare('SELECT * FROM photos WHERE id = ?').get(photoId);
     res.status(201).json(photo);
