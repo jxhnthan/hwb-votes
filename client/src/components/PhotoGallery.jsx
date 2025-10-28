@@ -156,7 +156,7 @@ function PhotoGallery({ photos, apiUrl, deviceId, onVote, isAdmin, onDelete }) {
       </div>
       {viewingPhoto ? (
         <div className="photo-viewer" onClick={() => setViewingPhoto(null)}>
-          <div className="viewer-hint">Tap anywhere to close</div>
+          <div className="viewer-hint">Tap to close</div>
           <div className="viewer-content" onClick={(e) => e.stopPropagation()}>
             <img
               src={`${apiUrl}/photo/${viewingPhoto.filename}`}
