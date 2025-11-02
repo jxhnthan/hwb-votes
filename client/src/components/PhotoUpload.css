@@ -68,13 +68,19 @@
   background-color: #fafafa;
 }
 
-/* Preview */
-.preview {
+/* Preview Grid */
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
   margin-bottom: 16px;
+}
+
+.preview {
   border-radius: var(--radius);
   overflow: hidden;
   border: 1px solid var(--color-border);
-  max-height: 300px;
+  aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,10 +89,9 @@
 
 .preview-image {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
-  max-height: 300px;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 /* Error message */
@@ -117,12 +122,9 @@
   .upload-card {
     padding: 20px;
   }
-  
-  .preview {
-    max-height: 250px;
-  }
-  
-  .preview-image {
-    max-height: 250px;
+
+  .preview-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
   }
 }

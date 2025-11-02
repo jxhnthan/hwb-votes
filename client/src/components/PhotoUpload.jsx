@@ -2,48 +2,60 @@ import { useState } from 'react';
 import './PhotoUpload.css';
 
 function PhotoUpload({ apiUrl, onSuccess }) {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const [title, setTitle] = useState('');
   const [value, setValue] = useState('');
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
   const handleFileSelect = (e) => {
-    const file = e.target.files[0];
-    if (file) {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    // Validate all files
+    const validFiles = [];
+    const newPreviews = [];
+
+    for (const file of files) {
       // Check file type
       if (!file.type.startsWith('image/')) {
-        setError('Please select an image file');
-        return;
-      }
-      
-      // Check file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setError('File size must be less than 5MB');
+        setError('All files must be images');
         return;
       }
 
-      setSelectedFile(file);
-      setError('');
-      
-      // Create preview
+      // Check file size (max 10MB per file)
+      if (file.size > 10 * 1024 * 1024) {
+        setError('Each file must be less than 10MB');
+        return;
+      }
+
+      validFiles.push(file);
+    }
+
+    setSelectedFiles(validFiles);
+    setError('');
+
+    // Create previews for all files
+    validFiles.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreview(reader.result);
+        newPreviews.push(reader.result);
+        if (newPreviews.length === validFiles.length) {
+          setPreviews([...newPreviews]);
+        }
       };
       reader.readAsDataURL(file);
-    }
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!selectedFile) {
-      setError('Please select a photo');
+
+    if (selectedFiles.length === 0) {
+      setError('Please select at least one photo');
       return;
     }
-
 
     if (!title.trim()) {
       setError('Please enter a title');
@@ -57,43 +69,45 @@ function PhotoUpload({ apiUrl, onSuccess }) {
     setUploading(true);
     setError('');
 
-    const formData = new FormData();
-  formData.append('photo', selectedFile);
-  formData.append('title', title);
-  formData.append('value', value);
-
-    console.log('Uploading to:', `${apiUrl}/upload`);
-    console.log('File:', selectedFile.name, 'Size:', selectedFile.size);
-
     try {
-      const response = await fetch(`${apiUrl}/upload`, {
-        method: 'POST',
-        body: formData,
-      });
+      // Upload all files sequentially
+      let uploadedCount = 0;
+      for (const file of selectedFiles) {
+        const formData = new FormData();
+        formData.append('photo', file);
+        formData.append('title', title);
+        formData.append('value', value);
 
-      console.log('Upload response status:', response.status);
+        console.log('Uploading:', file.name, 'Size:', file.size);
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Upload failed' }));
-        console.error('Upload error:', errorData);
-        throw new Error(errorData.error || 'Upload failed');
+        const response = await fetch(`${apiUrl}/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: 'Upload failed' }));
+          console.error('Upload error:', errorData);
+          throw new Error(errorData.error || 'Upload failed');
+        }
+
+        uploadedCount++;
+        console.log(`Upload success: ${uploadedCount}/${selectedFiles.length}`);
       }
 
-      const data = await response.json();
-      console.log('Upload success:', data);
-
       // Reset form
-      setSelectedFile(null);
-      setPreview(null);
+      setSelectedFiles([]);
+      setPreviews([]);
       setTitle('');
+      setValue('');
       setUploading(false);
-      
+
       if (onSuccess) {
         onSuccess();
       }
     } catch (err) {
       console.error('Upload exception:', err);
-      setError(`Failed to upload photo: ${err.message}`);
+      setError(`Failed to upload photos: ${err.message}`);
       setUploading(false);
     }
   };
@@ -136,23 +150,28 @@ function PhotoUpload({ apiUrl, onSuccess }) {
 
         <div className="form-group">
           <label htmlFor="photo" className="form-label">
-            Select Photo
+            Select Photo(s) - Upload multiple photos at once
           </label>
           <input
             type="file"
             id="photo"
             className="file-input"
             accept="image/*"
+            multiple
             onChange={handleFileSelect}
           />
           <label htmlFor="photo" className="file-label">
-            {selectedFile ? selectedFile.name : 'Choose a photo...'}
+            {selectedFiles.length > 0 ? `${selectedFiles.length} photo(s) selected` : 'Choose photo(s)...'}
           </label>
         </div>
 
-        {preview && (
-          <div className="preview">
-            <img src={preview} alt="Preview" className="preview-image" />
+        {previews.length > 0 && (
+          <div className="preview-grid">
+            {previews.map((preview, index) => (
+              <div key={index} className="preview">
+                <img src={preview} alt={`Preview ${index + 1}`} className="preview-image" />
+              </div>
+            ))}
           </div>
         )}
 
@@ -166,9 +185,9 @@ function PhotoUpload({ apiUrl, onSuccess }) {
           <button
             type="submit"
             className="btn btn-primary"
-            disabled={uploading || !selectedFile || !title}
+            disabled={uploading || selectedFiles.length === 0 || !title}
           >
-            {uploading ? 'Uploading...' : 'Upload Photo'}
+            {uploading ? 'Uploading...' : selectedFiles.length > 1 ? `Upload ${selectedFiles.length} Photos` : 'Upload Photo'}
           </button>
         </div>
       </form>
