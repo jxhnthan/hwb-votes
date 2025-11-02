@@ -319,10 +319,9 @@ body {
   }
 
   .gallery-tags {
-    justify-content: flex-start;
+    justify-content: center;
     gap: 8px;
     margin-bottom: 18px;
-    padding-left: 2px;
   }
 
   .tag-btn {
